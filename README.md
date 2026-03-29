@@ -1,69 +1,69 @@
 # 🛡️ Cloud WebGuard Agent
 
-Un agente de monitoreo de disponibilidad (uptime) moderno, serverless y automatizado. Vigila el estado de tus sitios web de forma continua, diagnostica los motivos de una caída utilizando Inteligencia Artificial (Google Gemini), y te notifica instantáneamente a tu teléfono vía Telegram.
+A modern, serverless, and automated uptime monitoring agent. It continuously monitors your websites' health, diagnoses downtime reasons using Artificial Intelligence (Google Gemini), and instantly notifies you directly on your phone via Telegram.
 
-Cuenta además con un *Dashboard* privado y panel de métricas históricas, totalmente integrado y listo para ser desplegado en la nube.
+It also features a private Dashboard and historical metrics panel, fully integrated and ready to be deployed to the cloud.
 
 ---
 
-## ✨ Características Principales
+## ✨ Key Features
 
-- **⏰ Monitoreo Continuo (Cron):** Audita el estado HTTP y calcula el tiempo de respuesta (*ping*) de URLs especificadas.
-- **🤖 Diagnóstico por IA:** Ante una caída, el agente le pregunta a `gemini-1.5-flash` cuáles podrían ser los causantes del código de error HTTP para explicarte brevemente qué pasó.
-- **📲 Alertas en Tiempo Real:** Se comunica de inmediato con vos a través de un Bot de Telegram.
-- **📊 Dashboard Interactivo:** Panel administrativo web (protegido por contraseña) con diseño *glassmorphism* para gestionar qué plataformas monitorear y visualizar gráficos de rendimiento recientes.
-- **📧 Reportes Mensuales (SLA):** Sistema de reportes automatizados en background (vía Resend) que te envía al correo las estadísticas globales de *Uptime* el día 1 de cada mes.
-- **🌩️ Serverless & Edge:** Optimizado de pies a cabeza para funcionar en entornos sin servidor como Vercel y consumiendo APIs para no incurrir en gastos de 24/7 en servidores.
+- **⏰ Continuous Monitoring (Cron):** Audits HTTP status and calculates response time (ping) of specified URLs.
+- **🤖 AI Diagnostics:** Upon detecting downtime, the agent queries `gemini-1.5-flash` to analyze probable causes for the HTTP error code and explain what happened.
+- **📲 Real-time Alerts:** Communicates immediately with you through a Telegram Bot.
+- **📊 Interactive Dashboard:** Web-based admin panel (password protected) with a *glassmorphism* design to manage monitored platforms and visualize recent performance charts.
+- **📧 Monthly SLA Reports:** Automated background reporting system (via Resend) that emails you global Uptime statistics on the 1st day of every month.
+- **🌩️ Serverless & Edge:** Fully optimized to run on serverless environments like Vercel, consuming external APIs to avoid 24/7 server hosting costs.
 
-## 🛠️ Stack Tecnológico
+## 🛠️ Technology Stack
 
 - **Frontend & Backend (API):** Next.js (App Router / TypeScript)
-- **Base de Datos:** Supabase (PostgreSQL)
-- **Inteligencia Artificial:** SDK de Google Generative AI
-- **Notificaciones:** Telegram Bot API & Resend API
-- **Infraestructura Sugerida:** Vercel (Hosting) + cron-job.org (Automatización)
+- **Database:** Supabase (PostgreSQL)
+- **Artificial Intelligence:** Google Generative AI SDK
+- **Notifications:** Telegram Bot API & Resend API
+- **Suggested Infrastructure:** Vercel (Hosting) + cron-job.org (Automation)
 
 ---
 
-## 🚀 Guía de Instalación y Despliegue
+## 🚀 Installation & Deployment Guide
 
-### 1. Variables de Entorno
-Copia el archivo base (si lo tienes) o crea un `.env.local` en tu entorno local, y eventualmente cópialas exactas en el administrador de **Environment Variables de Vercel (Producción)**:
+### 1. Environment Variables
+Create a `.env.local` in your local environment, and match these exactly in **Vercel's Environment Variables (Production)**:
 
 ```env
-# SEGURIDAD DEL DASHBOARD
-ADMIN_PASSWORD="super-contraseña-para-mi-panel"
+# DASHBOARD SECURITY
+ADMIN_PASSWORD="super-secure-dashboard-password"
 
-# TELEGRAM BOT (Para alertas push en tiempo real)
-TELEGRAM_BOT_TOKEN="tu-token-obtenido-del-botfather"
-MY_TELEGRAM_CHAT_ID="tu-chat-id-numerico"
+# TELEGRAM BOT (For real-time push alerts)
+TELEGRAM_BOT_TOKEN="your-botfather-token"
+MY_TELEGRAM_CHAT_ID="your-numeric-chat-id"
 
-# GOOGLE GEMINI (Para análisis de errores)
-GEMINI_API_KEY="tu-clave-de-google-ai-studio"
+# GOOGLE GEMINI (For error analysis)
+GEMINI_API_KEY="your-google-ai-studio-key"
 
-# SUPABASE (Base de datos PostgreSQL Serverless)
-SUPABASE_URL="https://tu-proyecto.supabase.co"
-SUPABASE_SERVICE_ROLE_KEY="tu-secret-role-key-que-empieza-con-eyJ"
+# SUPABASE (Serverless PostgreSQL database)
+SUPABASE_URL="https://your-project.supabase.co"
+SUPABASE_SERVICE_ROLE_KEY="your-secret-role-key-starting-with-eyJ"
 
-# RESEND (Para los emails mensuales automatizados)
-RESEND_API_KEY="re_tu-clave-de-resend"
-ADMIN_EMAIL="tu-email-de-informes@gmail.com"
+# RESEND (For automated monthly emails)
+RESEND_API_KEY="re_your-resend-key"
+ADMIN_EMAIL="your-monitoring-report-email@gmail.com"
 
-# AUTENTICACIÓN AL API DEL AGENTE (Lo que le envías desde el cron)
-CRON_SECRET="mi_secreto_super_largo_y_dificil"
+# AGENT API AUTHENTICATION (Sent from your cron job)
+CRON_SECRET="my_super_long_and_hard_secret_key"
 ```
 
-### 2. Base de Datos (Supabase)
-Dentro del panel de Supabase de tu proyecto, dirígete al **SQL Editor**, copia y ejecuta el contenido completo del archivo `supabase/schema.sql`. Esto creará automáticamente las tablas protegidas `sites` y `checks`.
+### 2. Database (Supabase)
+Inside your Supabase project panel, go to the **SQL Editor**, copy and execute the entire contents of the `supabase/schema.sql` file. This will automatically create the secure `sites` and `checks` tables.
 
-### 3. Vercel & Automatización
-Una vez que el proyecto esté subido a Vercel con sus variables asignadas:
-1. Crea una cuenta gratuita en [cron-job.org](https://cron-job.org).
-2. Crea un nuevo cron configurado para ejecutarse **Cada 5 Minutos**.
-3. En la URL pon la ruta de tu API con el parámetro secreto:  
-   `https://[tu-sitio-de-vercel]/api/cron?secret=mi_secreto_super_largo_y_dificil`
-4. ¡Guarda el trabajo y el agente cobrará vida!
+### 3. Vercel & Automation
+Once the project is deployed to Vercel with its assigned variables:
+1. Create a free account at [cron-job.org](https://cron-job.org).
+2. Create a new cron job configured to run **Every 5 Minutes**.
+3. For the URL, place your API route with the secret parameter:  
+   `https://[your-vercel-site.app]/api/cron?secret=my_super_long_and_hard_secret_key`
+4. Save the job and the agent will come to life!
 
 ---
 
-> Despliegue, estructura y base de código adaptada con cariño por M4lcom y Antigravity.
+> Deployment, structure, and codebase lovingly tailored by M4lcom and Antigravity.
