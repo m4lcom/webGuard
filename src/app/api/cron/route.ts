@@ -11,7 +11,11 @@ export async function GET(request: Request) {
   // Asegurar que el cron de Vercel está autorizado o es una prueba local
   const authHeader = request.headers.get('authorization');
   if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse('Unauthorized', { status: 401 });
+    return NextResponse.json({ 
+      error: 'Unauthorized', 
+      recibido: authHeader, 
+      esperado: `Bearer ${process.env.CRON_SECRET}` 
+    }, { status: 401 });
   }
 
   const TELEGRAM_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
