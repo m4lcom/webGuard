@@ -37,9 +37,13 @@ export default function Dashboard() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newSite),
     });
+    
     if (res.ok) {
       setNewSite({ name: '', url: '' });
       loadSites();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      alert('Error al añadir sitio: ' + (data.error || 'Error desconocido de red.'));
     }
   };
 
